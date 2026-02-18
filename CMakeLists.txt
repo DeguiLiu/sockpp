@@ -50,7 +50,6 @@ option(SOCKPP_BUILD_SHARED "Build shared library" ON)
 option(SOCKPP_BUILD_STATIC "Build static library" OFF)
 option(SOCKPP_BUILD_EXAMPLES "Build example applications" OFF)
 option(SOCKPP_BUILD_TESTS "Build unit tests" OFF)
-option(SOCKPP_BUILD_DOCUMENTATION "Create Doxygen reference documentation" OFF)
 option(SOCKPP_WITH_OPENSSL "TLS Secure Sockets with OpenSSL" OFF)
 option(SOCKPP_WITH_MBEDTLS "TLS Secure Sockets with Mbed TLS" OFF)
 
@@ -158,12 +157,6 @@ install(
 	DESTINATION
 		${CMAKE_INSTALL_LIBDIR}/cmake/sockpp
 )
-
-# --- Documentation ---
-
-if(SOCKPP_BUILD_DOCUMENTATION)
-	add_subdirectory(doc)
-endif()
 
 # --- Example applications ---
 
