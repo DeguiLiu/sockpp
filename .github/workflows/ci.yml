@@ -47,3 +47,4 @@ jobs:
       run: |
         cppcheck --enable=all --suppress=missingIncludeSystem \
           include/ src/ tests/ examples/ || true
+
