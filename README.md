@@ -1,5 +1,9 @@
 # sockpp
 
+[![CI](https://github.com/DeguiLiu/sockpp/actions/workflows/ci.yml/badge.svg)](https://github.com/DeguiLiu/sockpp/actions/workflows/ci.yml)
+[![Code Coverage](https://github.com/DeguiLiu/sockpp/actions/workflows/coverage.yml/badge.svg)](https://github.com/DeguiLiu/sockpp/actions/workflows/coverage.yml)
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
 Simple, modern, C++ network socket library.
 
 _sockpp_ is a fairly low-level C++ wrapper around the Berkeley sockets library using `socket`, `acceptor,` and `connector` classes that are familiar concepts from other languages.
