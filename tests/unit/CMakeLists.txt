@@ -41,7 +41,14 @@ message(STATUS "Building sockpp unit tests")
 # --- Get Catch2 ---
 
 set(UNIT_TEST_DIR ${PROJECT_SOURCE_DIR})
-find_package(Catch2 REQUIRED)
+
+include(FetchContent)
+FetchContent_Declare(
+    Catch2
+    URL https://ghfast.top/https://github.com/catchorg/Catch2/archive/refs/tags/v2.13.10.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP ON
+)
+FetchContent_MakeAvailable(Catch2)
 
 message(STATUS "Catch2 v${Catch2_VERSION}")
 if (Catch2_VERSION VERSION_LESS "3.0")
@@ -87,14 +94,16 @@ endif()
 
 # --- Link for executables ---
 
-target_link_libraries(unit_tests 
+target_link_libraries(unit_tests
     Sockpp::sockpp
     Catch2::Catch2
     Threads::Threads
 )
 
-include(CTest)
-include(Catch)
+target_include_directories(unit_tests PRIVATE
+    ${catch2_SOURCE_DIR}/single_include
+)
 
-catch_discover_tests(unit_tests)
+include(CTest)
+add_test(NAME unit_tests COMMAND unit_tests)
 
