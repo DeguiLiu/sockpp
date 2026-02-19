@@ -1,6 +1,6 @@
 # sockpp
 
-[![CI](https://github.com/DeguiLiu/sockpp/actions/workflows/ci.yml/badge.svg)](https://github.com/DeguiLiu/sockpp/actions/workflows/ci.yml)
+[![CI](https://github.com/DeguiLiu/sockpp/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/DeguiLiu/sockpp/actions/workflows/cmake-multi-platform.yml)
 [![Code Coverage](https://github.com/DeguiLiu/sockpp/actions/workflows/coverage.yml/badge.svg)](https://github.com/DeguiLiu/sockpp/actions/workflows/coverage.yml)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
