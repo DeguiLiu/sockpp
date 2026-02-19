@@ -63,7 +63,7 @@ public:
     tls_connector(const tls_context& ctx, const sock_address& addr)
         : base{ctx, connector{addr}} {
         if (auto res = tls_connect(); !res)
-            throw tls_error{res.error()};
+            SOCKPP_THROW(tls_error{res.error()});
     }
     /**
      * Creates a TLS connector and connects to the server.

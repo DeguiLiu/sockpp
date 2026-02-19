@@ -150,7 +150,7 @@ public:
      */
     sock_address_any(const sockaddr* addr, socklen_t n) {
         if (size_t(n) > MAX_SZ)
-            throw std::length_error("Address length out of range");
+            SOCKPP_THROW(std::length_error("Address length out of range"));
         std::memcpy(&addr_, addr, sz_ = n);
     }
     /**
@@ -175,7 +175,7 @@ public:
      */
     sock_address_any(const sockaddr_storage& addr, socklen_t n) {
         if (size_t(n) > MAX_SZ)
-            throw std::length_error("Address length out of range");
+            SOCKPP_THROW(std::length_error("Address length out of range"));
         std::memcpy(&addr_, &addr, sz_ = n);
     }
     /**

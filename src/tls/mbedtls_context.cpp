@@ -146,7 +146,7 @@ static mbedtls_ctr_drbg_context* get_drbg_context() {
         );
         if (ret != 0) {
             // FIXME: Not an errno; use different exception?
-            throw std::system_error{result<>::last_error()};
+            SOCKPP_THROW(std::system_error{result<>::last_error()});
         }
     });
     return &s_random_ctx;
@@ -166,7 +166,7 @@ unique_ptr<mbedtls_context::cert> mbedtls_context::parse_cert(
                 ret = MBEDTLS_ERR_X509_CERT_VERIFY_FAILED;
             }
 
-            throw std::system_error{result<>::last_error()};
+            SOCKPP_THROW(std::system_error{result<>::last_error()});
         }
     }
     return c;
@@ -354,7 +354,7 @@ void mbedtls_context::set_identity(
         nullptr, 0, nullptr, 0
     );
     if (err != 0) {
-        throw std::system_error{result<>::last_error()};
+        SOCKPP_THROW(std::system_error{result<>::last_error()});
     }
 
     set_identity(ident_cert.get(), ident_key.get());

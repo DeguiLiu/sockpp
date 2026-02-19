@@ -91,7 +91,7 @@ mbedtls_socket::mbedtls_socket(
     mbedtls_ssl_init(&ssl_);
     if (ctx.status() != 0)
         // TODO: Is this the right error type?
-        throw tls_error{ctx.status()};
+        SOCKPP_THROW(tls_error{ctx.status()});
 
     if (check_mbed_setup(mbedtls_ssl_setup(&ssl_, ctx_.ssl_config_.get())))
         return;
@@ -123,7 +123,7 @@ mbedtls_socket::mbedtls_socket(
         !(verify_flags & MBEDTLS_X509_BADCERT_SKIP_VERIFY)) {
         // char vrfy_buf[512];
         // mbedtls_x509_crt_verify_info(vrfy_buf, sizeof(vrfy_buf), "", verify_flags);
-        throw tls_error{MBEDTLS_ERR_X509_CERT_VERIFY_FAILED};
+        SOCKPP_THROW(tls_error{MBEDTLS_ERR_X509_CERT_VERIFY_FAILED});
     }
 }
 

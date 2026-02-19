@@ -53,7 +53,7 @@ constexpr size_t unix_address::MAX_PATH_NAME;
 
 unix_address::unix_address(const string& path) {
     if (path.length() > MAX_PATH_NAME)
-        throw system_error{make_error_code(errc::invalid_argument)};
+        SOCKPP_THROW(system_error{make_error_code(errc::invalid_argument)});
 
     addr_.sun_family = ADDRESS_FAMILY;
     // Remember, if len==MAX, there's no NUL terminator

@@ -124,7 +124,7 @@ public:
      */
     explicit can_socket(const can_address& addr) {
         if (auto res = open(addr); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates a CAN socket and binds it to the address.

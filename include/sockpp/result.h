@@ -244,7 +244,7 @@ public:
      */
     const T& value_or_throw() const {
         if (err_)
-            throw std::system_error{err_};
+            SOCKPP_THROW(std::system_error{err_});
         return val_;
     }
     /**
@@ -273,7 +273,7 @@ public:
      */
     T&& release_or_throw() {
         if (err_)
-            throw std::system_error{err_};
+            SOCKPP_THROW(std::system_error{err_});
         return std::move(val_);
     }
     /**

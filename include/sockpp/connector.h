@@ -86,7 +86,7 @@ public:
      */
     connector(const sock_address& addr) {
         if (auto res = connect(addr); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates the connector and attempts to connect to the specified
@@ -107,7 +107,7 @@ public:
     template <class Rep, class Period>
     connector(const sock_address& addr, const duration<Rep, Period>& relTime) {
         if (auto res = connect(addr, microseconds(relTime)); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates the connector and attempts to connect to the specified
@@ -133,7 +133,7 @@ public:
      */
     connector(const sock_address& addr, std::chrono::milliseconds t) {
         if (auto res = connect(addr, t); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates the connector and attempts to connect to the specified

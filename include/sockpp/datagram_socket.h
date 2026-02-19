@@ -98,7 +98,7 @@ public:
      */
     explicit datagram_socket(const sock_address& addr) {
         if (auto res = open(addr); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates a UDP socket and binds it to the address.

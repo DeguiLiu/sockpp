@@ -124,4 +124,23 @@ constexpr in_port_t TEST_PORT = 12345;
 
 }  // namespace sockpp
 
+/////////////////////////////////////////////////////////////////////////////
+// Exception support
+// When compiled with -fno-exceptions, throw is replaced with abort().
+// This allows sockpp headers to be included in -fno-exceptions translation
+// units (e.g. embedded systems).
+/////////////////////////////////////////////////////////////////////////////
+
+#if defined(__cpp_exceptions) || defined(__EXCEPTIONS) || defined(_CPPUNWIND)
+#define SOCKPP_THROW(ex) throw(ex)
+#else
+#include <cstdio>
+#include <cstdlib>
+#define SOCKPP_THROW(ex)               \
+    do {                               \
+        std::fputs(#ex "\n", stderr);  \
+        std::abort();                  \
+    } while (0)
+#endif
+
 #endif

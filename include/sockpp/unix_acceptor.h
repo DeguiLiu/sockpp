@@ -81,7 +81,7 @@ public:
      */
     unix_acceptor(const unix_address& addr, int queSize = DFLT_QUE_SIZE) {
         if (auto res = open(addr, queSize); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates a acceptor and starts it listening on the specified address.

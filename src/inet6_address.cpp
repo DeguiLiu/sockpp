@@ -58,7 +58,7 @@ inet6_address::inet6_address(const in6_addr& addr, in_port_t port) {
 inet6_address::inet6_address(const string& saddr, in_port_t port) {
     auto res = create(saddr, port);
     if (!res)
-        throw system_error{res.error()};
+        SOCKPP_THROW(system_error{res.error()});
 
     addr_ = res.value().addr_;
 }

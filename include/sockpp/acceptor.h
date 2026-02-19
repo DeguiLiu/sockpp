@@ -115,7 +115,7 @@ public:
      */
     acceptor(const sock_address& addr, int queSize = DFLT_QUE_SIZE, int reuse = 0) {
         if (auto res = open(addr, queSize, reuse); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates an acceptor socket and starts it listening to the specified
@@ -231,7 +231,7 @@ public:
      */
     acceptor_tmpl(const addr_t& addr, int queSize = DFLT_QUE_SIZE, int reuse = 0) {
         if (auto res = open(addr, queSize, reuse); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates an acceptor and starts it listening on the specified address.
@@ -264,7 +264,7 @@ public:
      */
     acceptor_tmpl(in_port_t port, int queSize = DFLT_QUE_SIZE) {
         if (auto res = open(port, queSize); !res)
-            throw std::system_error{res.error()};
+            SOCKPP_THROW(std::system_error{res.error()});
     }
     /**
      * Creates a acceptor and starts it listening on the specified port.

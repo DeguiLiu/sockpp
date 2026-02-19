@@ -46,10 +46,10 @@ namespace sockpp {
 tls_socket::tls_socket(const tls_context& ctx, stream_socket&& sock)
     : base{std::move(sock)}, ssl_{::SSL_new(ctx.ctx_)} {
     if (!ssl_)
-        throw tls_error::from_last_error();
+        SOCKPP_THROW(tls_error::from_last_error());
 
     if (auto res = tls_check_res(::SSL_set_fd(ssl_, handle())); !res)
-        throw res;
+        SOCKPP_THROW(res);
 }
 
 tls_socket::tls_socket(const tls_context& ctx, stream_socket&& sock, error_code& ec) noexcept
