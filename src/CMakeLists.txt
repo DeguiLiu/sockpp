@@ -41,14 +41,8 @@ include(GenerateExportHeader)
 # The common sources.
 # Additional files are added below, as configured.
 set(SOURCES
-    acceptor.cpp
-    connector.cpp
-    datagram_socket.cpp
-    error.cpp
-    inet_address.cpp
-    inet6_address.cpp
     socket.cpp
-    stream_socket.cpp
+    address.cpp
 )
 
 # Additional sources (platform & config)

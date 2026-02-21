@@ -42,7 +42,7 @@
 #include <iostream>
 #include <string>
 
-#include "sockpp/tcp_connector.h"
+#include "sockpp/tcp.h"
 #include "sockpp/tls/connector.h"
 #include "sockpp/tls/context.h"
 #include "sockpp/tls/error.h"

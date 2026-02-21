@@ -39,7 +39,7 @@
 #include <iostream>
 #include <string>
 
-#include "sockpp/udp_socket.h"
+#include "sockpp/udp.h"
 #include "sockpp/version.h"
 
 using namespace std;

@@ -41,7 +41,7 @@
 #include <string>
 
 #include "catch2_version.h"
-#include "sockpp/unix_stream_socket.h"
+#include "sockpp/unix.h"
 
 using namespace sockpp;
 

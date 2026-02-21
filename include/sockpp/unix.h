@@ -1,19 +1,18 @@
 /**
- * @file unix_address.h
+ * @file unix.h
  *
- * Class for a UNIX-domain socket address.
+ * Unix-domain socket classes: address, stream, datagram, acceptor, connector.
  *
  * @author Frank Pagliughi
- * @author SoRo Systems, Inc.
- * @author www.sorosys.com
- *
- * @date February 2014
+ * @author Degui Liu (DeguiLiu)
  */
 
 // --------------------------------------------------------------------------
 // This file is part of the "sockpp" C++ socket library.
 //
-// Copyright (c) 2014-2023 Frank Pagliughi All rights reserved.
+// Copyright (c) 2014-2024 Frank Pagliughi
+// Copyright (c) 2025 Degui Liu (DeguiLiu)
+// All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -43,16 +42,20 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // --------------------------------------------------------------------------
 
-#ifndef __sockpp_unix_addr_h
-#define __sockpp_unix_addr_h
+#ifndef __sockpp_unix_h
+#define __sockpp_unix_h
 
 #include <cstring>
 #include <iostream>
 #include <string>
 
+#include "sockpp/acceptor.h"
+#include "sockpp/connector.h"
+#include "sockpp/datagram_socket.h"
 #include "sockpp/platform.h"
 #include "sockpp/result.h"
 #include "sockpp/sock_address.h"
+#include "sockpp/stream_socket.h"
 #include "sockpp/types.h"
 
 #if defined(_WIN32)
@@ -63,6 +66,8 @@
 
 namespace sockpp {
 
+/////////////////////////////////////////////////////////////////////////////
+//                          unix_address
 /////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -141,24 +146,17 @@ public:
      * @return The path to which this address refers.
      */
     string path() const {
-        // Remember, if len==MAX, there's no NUL terminator
         return string(addr_.sun_path, strnlen(addr_.sun_path, MAX_PATH_NAME));
     }
     /**
      * Gets the size of the address structure.
-     * Note: In this implementation, this should return sizeof(this) but
-     * more convenient in some places, and the implementation might change
-     * in the future, so it might be more compatible with future revisions
-     * to use this call.
      * @return The size of the address structure.
      */
     socklen_t size() const override { return socklen_t(SZ); }
     /**
      * Creates an address from the specified path.
-     *
      * @param path The path to the socket file.
-     * @return A result with the address on success, or an error code on
-     *  	   failure.
+     * @return A result with the address on success, or an error code on failure.
      */
     static result<unix_address> create(const string& path);
     /**
@@ -185,13 +183,10 @@ public:
     sockaddr_un* sockaddr_un_ptr() { return &addr_; }
     /**
      * Gets a printable string for the address.
-     * @return A string representation of the address in the form
-     *  	   "unix:<path>"
+     * @return A string representation of the address in the form "unix:<path>"
      */
     string to_string() const { return string("unix:") + path(); }
 };
-
-// --------------------------------------------------------------------------
 
 /**
  * Stream inserter for the address.
@@ -202,6 +197,100 @@ public:
 std::ostream& operator<<(std::ostream& os, const unix_address& addr);
 
 /////////////////////////////////////////////////////////////////////////////
+//                       unix socket typedefs
+/////////////////////////////////////////////////////////////////////////////
+
+/** Streaming Unix-domain socket */
+using unix_stream_socket = stream_socket_tmpl<unix_address>;
+
+/** Streaming Unix-domain socket (same as a `unix_stream_socket`) */
+using unix_socket = unix_stream_socket;
+
+/** Unix-domain datagram socket */
+using unix_datagram_socket = datagram_socket_tmpl<unix_address>;
+
+/** Unix-domain datagram socket (same as `unix_datagram_socket`) */
+using unix_dgram_socket = unix_datagram_socket;
+
+/** Unix-domain active connector socket. */
+using unix_connector = connector_tmpl<unix_socket, unix_address>;
+
+/////////////////////////////////////////////////////////////////////////////
+//                          unix_acceptor
+/////////////////////////////////////////////////////////////////////////////
+
+/// Class for creating a Unix-domain server.
+/// Objects of this class bind and listen on Unix-domain ports for
+/// connections. Normally, a server thread creates one of these and blocks
+/// on the call to accept incoming connections. The call to accept creates
+/// and returns a @ref unix_stream_socket which can then be used for the
+/// actual communications.
+
+class unix_acceptor : public acceptor
+{
+    /** The base class */
+    using base = acceptor;
+
+    // Non-copyable
+    unix_acceptor(const unix_acceptor&) = delete;
+    unix_acceptor& operator=(const unix_acceptor&) = delete;
+
+public:
+    /**
+     * Creates an unconnected acceptor.
+     */
+    unix_acceptor() {}
+    /**
+     * Creates a acceptor and starts it listening on the specified address.
+     * @param addr The TCP address on which to listen.
+     * @param queSize The listener queue size.
+     * @throws std::system_error on failure
+     */
+    unix_acceptor(const unix_address& addr, int queSize = DFLT_QUE_SIZE) {
+        if (auto res = open(addr, queSize); !res)
+            SOCKPP_THROW(std::system_error{res.error()});
+    }
+    /**
+     * Creates a acceptor and starts it listening on the specified address.
+     * @param addr The TCP address on which to listen.
+     * @param queSize The listener queue size.
+     * @param ec Gets the error code on failure
+     */
+    unix_acceptor(const unix_address& addr, int queSize, error_code& ec) noexcept {
+        ec = open(addr, queSize).error();
+    }
+    /**
+     * Gets the local address to which we are bound.
+     * @return The local address to which we are bound.
+     */
+    unix_address address() const { return unix_address(base::address()); }
+    /**
+     * Base open call also work.
+     */
+    using base::open;
+    /**
+     * Opens the acceptor socket and binds it to the specified address.
+     * @param addr The address to which this server should be bound.
+     * @param queSize The listener queue size.
+     * @return @em true on success, @em false on error
+     */
+    result<> open(const unix_address& addr, int queSize = DFLT_QUE_SIZE) {
+        return base::open(addr, queSize);
+    }
+    /**
+     * Accepts an incoming UNIX connection and gets the address of the
+     * client.
+     * @return A unix_socket to the client.
+     */
+    result<unix_socket> accept() noexcept {
+        if (auto res = base::accept(); res)
+            return unix_socket{res.release()};
+        else
+            return res.error();
+    }
+};
+
+/////////////////////////////////////////////////////////////////////////////
 }  // namespace sockpp
 
-#endif  // __sockpp_unix_addr_h
+#endif  // __sockpp_unix_h

@@ -50,8 +50,8 @@
 #include <iostream>
 #include <thread>
 
-#include "sockpp/udp6_socket.h"
-#include "sockpp/udp_socket.h"
+#include "sockpp/udp.h"
+#include "sockpp/udp.h"
 #include "sockpp/version.h"
 
 using namespace std;

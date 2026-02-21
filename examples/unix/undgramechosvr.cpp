@@ -49,7 +49,7 @@
 
 #include <iostream>
 
-#include "sockpp/unix_dgram_socket.h"
+#include "sockpp/unix.h"
 #include "sockpp/version.h"
 
 using namespace std;

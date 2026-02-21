@@ -43,7 +43,7 @@
 #include <iostream>
 #include <thread>
 
-#include "sockpp/tcp_acceptor.h"
+#include "sockpp/tcp.h"
 #include "sockpp/version.h"
 
 using namespace std;

@@ -41,9 +41,9 @@
 #include <string>
 
 #include "catch2_version.h"
-#include "sockpp/tcp_acceptor.h"
-#include "sockpp/tcp_connector.h"
-#include "sockpp/tcp_socket.h"
+#include "sockpp/tcp.h"
+#include "sockpp/tcp.h"
+#include "sockpp/tcp.h"
 
 using namespace sockpp;
 

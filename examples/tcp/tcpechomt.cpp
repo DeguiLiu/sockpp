@@ -40,7 +40,7 @@
 #include <string>
 #include <thread>
 
-#include "sockpp/tcp_connector.h"
+#include "sockpp/tcp.h"
 #include "sockpp/version.h"
 
 using namespace std;

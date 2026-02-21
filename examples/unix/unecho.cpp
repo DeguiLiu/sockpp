@@ -39,7 +39,7 @@
 #include <iostream>
 #include <string>
 
-#include "sockpp/unix_connector.h"
+#include "sockpp/unix.h"
 #include "sockpp/version.h"
 
 using namespace std;

@@ -1,19 +1,17 @@
 /**
- * @file unix_connector.h
+ * @file tcp.h
  *
- * Class for creating client-side UNIX-domain socket connections.
+ * IPv4/IPv6 TCP socket type aliases: socket, connector, acceptor.
  *
- * @author  Frank Pagliughi
- * @author  SoRo Systems, Inc.
- * @author  www.sorosys.com
- *
- * @date  December 2018
+ * @author Frank Pagliughi
+ * @author Degui Liu (DeguiLiu)
  */
 
 // --------------------------------------------------------------------------
 // This file is part of the "sockpp" C++ socket library.
 //
-// Copyright (c) 2014-2017 Frank Pagliughi
+// Copyright (c) 2019-2024 Frank Pagliughi
+// Copyright (c) 2025 Degui Liu (DeguiLiu)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -44,20 +42,42 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // --------------------------------------------------------------------------
 
-#ifndef __sockpp_unix_connector_h
-#define __sockpp_unix_connector_h
+#ifndef __sockpp_tcp_h
+#define __sockpp_tcp_h
 
+#include "sockpp/acceptor.h"
 #include "sockpp/connector.h"
-#include "sockpp/unix_stream_socket.h"
+#include "sockpp/inet_address.h"
+#include "sockpp/inet6_address.h"
+#include "sockpp/stream_socket.h"
 
 namespace sockpp {
 
 /////////////////////////////////////////////////////////////////////////////
+// IPv4 TCP
 
-/** Unix-domain active connector socket. */
-using unix_connector = connector_tmpl<unix_socket, unix_address>;
+/** IPv4 streaming TCP socket */
+using tcp_socket = stream_socket_tmpl<inet_address>;
+
+/** IPv4 TCP connector (client) */
+using tcp_connector = connector_tmpl<tcp_socket>;
+
+/** IPv4 TCP acceptor (server) */
+using tcp_acceptor = acceptor_tmpl<tcp_socket>;
 
 /////////////////////////////////////////////////////////////////////////////
-};  // namespace sockpp
+// IPv6 TCP
 
-#endif  // __sockpp_unix_connector_h
+/** IPv6 streaming TCP socket */
+using tcp6_socket = stream_socket_tmpl<inet6_address>;
+
+/** IPv6 TCP connector (client) */
+using tcp6_connector = connector_tmpl<tcp6_socket>;
+
+/** IPv6 TCP acceptor (server) */
+using tcp6_acceptor = acceptor_tmpl<tcp6_socket>;
+
+/////////////////////////////////////////////////////////////////////////////
+}  // namespace sockpp
+
+#endif  // __sockpp_tcp_h

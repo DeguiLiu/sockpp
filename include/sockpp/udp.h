@@ -1,19 +1,17 @@
 /**
- * @file tcp_connector.h
+ * @file udp.h
  *
- * Class for creating client-side TCP connections
+ * IPv4/IPv6 UDP socket type aliases.
  *
- * @author	Frank Pagliughi
- * @author	SoRo Systems, Inc.
- * @author  www.sorosys.com
- *
- * @date	December 2014
+ * @author Frank Pagliughi
+ * @author Degui Liu (DeguiLiu)
  */
 
 // --------------------------------------------------------------------------
 // This file is part of the "sockpp" C++ socket library.
 //
-// Copyright (c) 2014-2019 Frank Pagliughi
+// Copyright (c) 2019-2024 Frank Pagliughi
+// Copyright (c) 2025 Degui Liu (DeguiLiu)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -44,20 +42,24 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // --------------------------------------------------------------------------
 
-#ifndef __sockpp_tcp_connector_h
-#define __sockpp_tcp_connector_h
+#ifndef __sockpp_udp_h
+#define __sockpp_udp_h
 
-#include "sockpp/connector.h"
-#include "sockpp/tcp_socket.h"
+#include "sockpp/datagram_socket.h"
+#include "sockpp/inet_address.h"
+#include "sockpp/inet6_address.h"
 
 namespace sockpp {
 
 /////////////////////////////////////////////////////////////////////////////
 
-/** IPv4 active, connector (client) socket. */
-using tcp_connector = connector_tmpl<tcp_socket>;
+/** UDP datagram socket type for IPv4 */
+using udp_socket = datagram_socket_tmpl<inet_address>;
+
+/** UDP datagram socket type for IPv6 */
+using udp6_socket = datagram_socket_tmpl<inet6_address>;
 
 /////////////////////////////////////////////////////////////////////////////
-};  // namespace sockpp
+}  // namespace sockpp
 
-#endif  // __sockpp_tcp_connector_h
+#endif  // __sockpp_udp_h

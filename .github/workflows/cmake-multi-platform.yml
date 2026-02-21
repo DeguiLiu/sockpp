@@ -2,51 +2,79 @@ name: CI
 
 on:
   push:
-    branches: [ "master", "develop" ]
+    branches: [ master ]
   pull_request:
-    branches: [ "master", "develop" ]
+    branches: [ master ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Release]
-        c_compiler: [gcc, clang]
-        include:
-          - c_compiler: gcc
-            cpp_compiler: g++
-          - c_compiler: clang
-            cpp_compiler: clang++
+        os: [ubuntu-latest, windows-latest]
+        compiler: [gcc, clang, msvc]
+        exclude:
+          - os: windows-latest
+            compiler: gcc
+          - os: windows-latest
+            compiler: clang
+          - os: ubuntu-latest
+            compiler: msvc
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Catch2 v3 from Source
+    - name: Install Catch2 (Linux)
+      if: runner.os == 'Linux'
       run: |
-        git clone https://github.com/catchorg/Catch2.git
+        git clone --branch v3.8.0 --depth 1 https://github.com/catchorg/Catch2.git
         cd Catch2
-        git checkout "v3.8.0"
-        mkdir build && cd build
-        cmake .. -DBUILD_TESTING=OFF
-        sudo cmake --build . --target install
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+        cmake --build build
+        sudo cmake --install build
 
-    - name: Configure CMake
+    - name: Install Catch2 (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        git clone --branch v3.8.0 --depth 1 https://github.com/catchorg/Catch2.git
+        cd Catch2
+        cmake -B build -DBUILD_TESTING=OFF
+        cmake --build build --config Release
+        cmake --install build --config Release
+
+    - name: Set compiler (GCC)
+      if: matrix.compiler == 'gcc'
+      run: |
+        echo "CC=gcc" >> $GITHUB_ENV
+        echo "CXX=g++" >> $GITHUB_ENV
+
+    - name: Set compiler (Clang)
+      if: matrix.compiler == 'clang'
+      run: |
+        echo "CC=clang" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
+
+    - name: Configure
       run: >
         cmake -B build
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_BUILD_TYPE=Release
         -DSOCKPP_BUILD_SHARED=ON
         -DSOCKPP_BUILD_STATIC=ON
         -DSOCKPP_BUILD_EXAMPLES=ON
         -DSOCKPP_BUILD_TESTS=ON
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: cmake --build build --config Release
 
-    - name: Test
+    - name: Test (Linux)
+      if: runner.os == 'Linux'
       working-directory: build
-      run: ctest --build-config ${{ matrix.build_type }}
+      run: ctest -C Release --output-on-failure
+
+    - name: Test (Windows)
+      if: runner.os == 'Windows'
+      working-directory: build
+      run: |
+        $env:PATH = "${{ github.workspace }}\build\src\Release;" + $env:PATH
+        ctest -C Release --output-on-failure
