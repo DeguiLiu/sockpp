@@ -53,6 +53,7 @@
 #include <string>
 
 #include "sockpp/platform.h"
+#include "sockpp/types.h"
 
 namespace sockpp {
 
